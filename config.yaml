@@ -1,0 +1,9 @@
+system:
+  environment: "development"
+router:
+  port: 3887
+  mode: "debug"
+nats:
+  connectionString: "nats://localhost:4222"
+  jwt: "asdf"
+  seed: "asdf"
