@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vanityDomainManager-config
+  namespace: default
+data:
+  config.yaml: |
+    nats:
+        connectionString: 'nats://nats.nats:4222'
+        jwt:
+        seed:
+    router:
+        port: 9595
+        mode: 'debug'
+    system:
+        name: 'Vanity Domain Manager'
+        environment: production

@@ -1,0 +1,45 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app: vanityDomainManager
+  name: vanityDomainManager
+  namespace: default
+rules:
+  - apiGroups:
+      - networking
+    resources:
+      - ingresses
+    verbs:
+      - use
+      - get
+      - list
+      - watch
+      - create
+      - delete
+      - update
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app: vanityDomainManager
+  name: vanityDomainManager
+  namespace: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: vanityDomainManager
+subjects:
+  - kind: ServiceAccount
+    name: vanityDomainManager
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  namespace: default
+  labels:
+    app: vanityDomainManager
+  name: vanityDomainManager
