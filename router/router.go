@@ -14,7 +14,7 @@ func Start() {
 	})
 
 	router.POST("/v1/jobs", func(c *gin.Context) {
-		var job jobs.DomainJob
+		var job jobs.VanityDomainJob
 		if err := c.BindJSON(&job); err != nil {
 			c.JSON(400, gin.H{"error": "Invalid request body"})
 			return

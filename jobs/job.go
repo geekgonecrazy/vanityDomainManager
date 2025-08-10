@@ -15,7 +15,7 @@ type VanityDomain struct {
 	TargetServicePort     int32             `json:"targetServicePort,omitempty"`   // Optional, The service port to set in the ingress
 }
 
-type DomainJob struct {
+type VanityDomainJob struct {
 	Type        string       `json:"type"`        // "add", "change", or "remove"
 	Domain      VanityDomain `json:"domain"`      // The vanity domain to process
 	ReferenceID string       `json:"referenceId"` // Unique ID for the job, can be used to track the job

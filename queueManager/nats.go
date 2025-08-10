@@ -42,7 +42,7 @@ func Start() (*queueManager, error) {
 	}
 
 	natsOpts = append(natsOpts,
-		nats.Name("Vanity Domain Verifier"),
+		nats.Name("Vanity Domain Manager"),
 		nats.RetryOnFailedConnect(true),
 		nats.MaxReconnects(-1),
 		nats.Timeout(15*time.Second),
@@ -93,8 +93,8 @@ func (q *queueManager) ensureStreams() error {
 	env := config.Config().System().Environment
 
 	statusStream, err := q.js.CreateOrUpdateStream(context.Background(), jetstream.StreamConfig{
-		Name:        fmt.Sprintf("%s_%s", env, "vanitydomainverifier_status"),
-		Description: "Queue for Status Updates coming from Vanity Domain Verifier",
+		Name:        fmt.Sprintf("%s_%s", env, "vanityDomainManager_status"),
+		Description: "Queue for Status Updates coming from Vanity Domain Manager",
 		Subjects: []string{
 			q.GetStatusSubject(">"),
 		},
@@ -108,8 +108,8 @@ func (q *queueManager) ensureStreams() error {
 	}
 
 	jobStream, err := q.js.CreateOrUpdateStream(context.Background(), jetstream.StreamConfig{
-		Name:        fmt.Sprintf("%s_%s", env, "vanitydomainverifier_jobs"),
-		Description: "Job Queue for Vanity Domain Verifier",
+		Name:        fmt.Sprintf("%s_%s", env, "vanityDomainManager_jobs"),
+		Description: "Job Queue for Vanity Domain Manager",
 		Subjects: []string{
 			q.GetJobSubject(">"),
 		},
@@ -137,7 +137,7 @@ func (q *queueManager) StartWorkers() error {
 	return nil
 }
 
-func (q *queueManager) AddDomainJob(job jobs.DomainJob) error {
+func (q *queueManager) AddDomainJob(job jobs.VanityDomainJob) error {
 	data, err := json.Marshal(job)
 	if err != nil {
 		return fmt.Errorf("json marshal: %w", err)
@@ -177,11 +177,11 @@ func (q *queueManager) SendStatusUpdate(referenceID string, success bool, errorM
 }
 
 func (q *queueManager) GetJobSubject(sub string) string {
-	return fmt.Sprintf("%s.vanityDomainVerifier.domainjob.%s", config.Config().System().Environment, sub)
+	return fmt.Sprintf("%s.vanityDomainManager.domainjob.%s", config.Config().System().Environment, sub)
 }
 
 func (q *queueManager) GetStatusSubject(sub string) string {
-	return fmt.Sprintf("%s.vanityDomainVerifier.status.%s", config.Config().System().Environment, sub)
+	return fmt.Sprintf("%s.vanityDomainManager.status.%s", config.Config().System().Environment, sub)
 }
 
 func (q *queueManager) ackornack(config jetstream.ConsumerConfig, msg jetstream.Msg, referenceID string, hasError bool, errorMessage string) {

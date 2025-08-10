@@ -16,9 +16,9 @@ func (q *queueManager) startDomainJobWorker() error {
 	q.logger.Println("Starting Domain job Worker")
 
 	config := jetstream.ConsumerConfig{
-		Name:          "vanityDomainVerifier-domainjob-worker",
-		Durable:       "vanityDomainVerifier-domainjob-worker",
-		Description:   "The consumer for the vanityDomainVerifier",
+		Name:          "vanityDomainManager-domainjob-worker",
+		Durable:       "vanityDomainManager-domainjob-worker",
+		Description:   "The consumer for the vanityDomainManager",
 		AckPolicy:     jetstream.AckExplicitPolicy,
 		FilterSubject: q.GetJobSubject(">"),
 		MaxDeliver:    10,
@@ -120,7 +120,7 @@ func (q *queueManager) domainJobHandler(config jetstream.ConsumerConfig) func(ms
 			q.ackornack(config, msg, referenceID, hasError, errorMsg)
 		}()
 
-		var job jobs.DomainJob
+		var job jobs.VanityDomainJob
 		if err := json.Unmarshal(msg.Data(), &job); err != nil {
 			q.logger.Printf("failed to unmarshal job err: %s", err)
 			return
