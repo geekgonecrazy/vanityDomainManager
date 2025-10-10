@@ -24,12 +24,12 @@ func main() {
 
 	flag.Parse()
 
-	if err := kubernetes.NewClient(*kubeconfig); err != nil {
-		panic(err)
-	}
-
 	if err := config.Load(*configPath); err != nil {
 		panic(fmt.Errorf("failed to load config: %w", err))
+	}
+
+	if err := kubernetes.NewClient(*kubeconfig, config.Config().Cluster()); err != nil {
+		panic(err)
 	}
 
 	mgr, err := queueManager.Start()

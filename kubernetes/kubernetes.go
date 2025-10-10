@@ -6,6 +6,7 @@ import (
 	"log"
 	"strings"
 
+	"github.com/geekgonecrazy/vanityDomainManager/config"
 	"github.com/geekgonecrazy/vanityDomainManager/jobs"
 	v1 "k8s.io/api/core/v1"
 	networkingV1 "k8s.io/api/networking/v1"
@@ -29,7 +30,7 @@ func GetClient() *KubeClient {
 	return kubeClient
 }
 
-func NewClient(kubeconfig string) (err error) {
+func NewClient(kubeconfig string, clusterConfig config.ClusterConfig) (err error) {
 	var config *rest.Config
 
 	if kubeconfig != "" {
@@ -53,10 +54,10 @@ func NewClient(kubeconfig string) (err error) {
 
 	kubeClient = &KubeClient{
 		client:            clientset,
-		Namespace:         "default",          // or your desired namespace
-		CertManagerIssuer: "letsencrypt-prod", // or your desired cert-manager issuer
-		ServiceName:       "your-service",     // or your desired service name
-		ServicePort:       3000,               // or your desired service port
+		Namespace:         clusterConfig.Namespace,
+		CertManagerIssuer: clusterConfig.CertManagerIssuer,
+		ServiceName:       clusterConfig.ServiceName,
+		ServicePort:       clusterConfig.ServicePort,
 	}
 
 	return err

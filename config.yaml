@@ -7,3 +7,8 @@ nats:
   connectionString: "nats://localhost:4222"
   jwt: "asdf"
   seed: "asdf"
+cluster:
+  namespace: "default"
+  certManagerIssuer: "letsencrypt-prod"
+  serviceName: "your-service"
+  servicePort: 3000
