@@ -13,11 +13,13 @@ import (
 )
 
 func main() {
-	var kubeconfig *string
+
+	kubeconfig := flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
 	if home := os.Getenv("HOME"); home != "" {
-		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
-	} else {
-		kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
+		kubePath := filepath.Join(home, ".kube", "config")
+		if _, err := os.Stat(kubePath); err == nil {
+			kubeconfig = flag.String("kubeconfig", kubePath, "(optional) absolute path to the kubeconfig file")
+		}
 	}
 
 	configPath := flag.String("config", "config.yaml", "path to the configuration file")
