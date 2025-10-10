@@ -4,8 +4,8 @@ WORKDIR /go/src/github.com/geekgonecrazy/vanityDomainManager
 
 COPY . .
 
-RUN GOOS=linux && \
-    go build ./cmd/vanityDomainManager/
+RUN CGO_ENABLED=0 GOOS=linux && \
+    go build -tags netgo,osusergo -ldflags="-extldflags=-static" ./cmd/vanityDomainManager/
 
 FROM alpine:latest
 
